@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Birthday.exe — Brother Edition</title>
+<style>
+  :root { --bg:#070b16; --panel:#101a2b; --cyan:#67e8f9; --pink:#f0abfc; --green:#86efac; --gold:#fde68a; --muted:#9fb0c8; }
+  * { box-sizing:border-box; }
+  body { margin:0; min-height:100vh; color:#eaf4ff; background:radial-gradient(circle at 20% 0%,#172554 0,transparent 38%),radial-gradient(circle at 100% 100%,#3b0764 0,transparent 35%),var(--bg); font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; display:grid; place-items:center; padding:20px; overflow-x:hidden; }
+  .window { width:min(760px,100%); background:rgba(9,15,30,.94); border:1px solid #334765; border-radius:18px; box-shadow:0 25px 90px #0009,0 0 35px #22d3ee18; overflow:hidden; position:relative; }
+  .bar { display:flex; align-items:center; gap:8px; padding:13px 16px; background:#121d31; border-bottom:1px solid #293953; color:#b7c8e2; font-size:12px; }
+  .dot { width:10px;height:10px;border-radius:50%;display:inline-block; } .red{background:#fb7185}.yellow{background:#fbbf24}.green{background:#4ade80}
+  .bar span:last-child { margin-left:auto; }
+  main { padding:clamp(20px,5vw,42px); }
+  .tag { color:var(--cyan); letter-spacing:3px; font-size:11px; text-transform:uppercase; }
+  h1 { font-size:clamp(32px,7vw,58px); line-height:1; margin:14px 0 10px; letter-spacing:-2px; }
+  h1 .exe { color:var(--pink); text-shadow:0 0 22px #e879f955; }
+  .sub { color:var(--muted); line-height:1.6; font-family:system-ui,sans-serif; }
+  .terminal { background:#050914; border:1px solid #23324a; border-radius:12px; padding:17px; margin:25px 0 18px; min-height:175px; color:var(--green); font-size:13px; line-height:1.85; white-space:pre-wrap; overflow-wrap:anywhere; }
+  .prompt { color:var(--cyan); }
+  .progress-wrap { height:8px; background:#1c2940; border-radius:20px; overflow:hidden; margin:15px 0 8px; }
+  .progress { width:0%; height:100%; background:linear-gradient(90deg,#67e8f9,#c084fc,#f9a8d4); border-radius:20px; transition:width .16s; }
+  .status { display:flex; justify-content:space-between; color:#93a7c4; font-size:11px; gap:12px; }
+  button { font:inherit; border:0; border-radius:10px; padding:14px 18px; cursor:pointer; color:#07111e; background:linear-gradient(100deg,var(--cyan),#c4b5fd); font-weight:900; width:100%; transition:transform .15s,filter .15s; }
+  button:hover { transform:translateY(-2px); filter:brightness(1.08); } button:active { transform:scale(.99); }
+  button:focus-visible { outline:3px solid white; outline-offset:3px; }
+  .hidden { display:none !important; }
+  .gift { text-align:center; padding:8px 0 4px; }
+  .emoji { font-size:clamp(54px,12vw,86px); filter:drop-shadow(0 0 18px #f9a8d455); animation:bob 2s ease-in-out infinite; }
+  h2 { font-size:clamp(25px,5vw,38px); margin:12px 0; }
+  .message { font-family:system-ui,sans-serif; color:#dbeafe; line-height:1.8; font-size:16px; }
+  .stats { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin:22px 0; }
+  .stat { background:#111c30; border:1px solid #293953; border-radius:10px; padding:14px 8px; text-align:center; }
+  .stat b { display:block; color:var(--gold); font-size:clamp(17px,4vw,24px); margin-bottom:6px; }
+  .stat small { color:#9fb0c8; font-size:10px; letter-spacing:1px; }
+  .signature { color:var(--pink); margin-top:22px; font-size:13px; }
+  .foot { text-align:center; color:#7185a3; font-size:10px; margin-top:20px; }
+  .confetti { position:fixed; top:-20px; width:8px; height:12px; opacity:.9; pointer-events:none; animation:fall linear forwards; z-index:10; }
+  @keyframes fall { to { transform:translateY(110vh) rotate(760deg); opacity:.15; } }
+  @keyframes bob { 50% { transform:translateY(-8px) rotate(3deg); } }
+  @media(max-width:430px){ .stats{grid-template-columns:1fr;} .stat{display:flex;align-items:center;justify-content:space-between;text-align:left;padding:12px 15px;} .stat b{margin:0;} }
+  @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms !important;transition-duration:.01ms !important;}}
+</style>
+</head>
+<body>
+<div class="window">
+  <div class="bar"><i class="dot red"></i><i class="dot yellow"></i><i class="dot green"></i><span>brother_pc / birthday.exe</span></div>
+  <main>
+    <div id="intro">
+      <div class="tag">// special executable detected</div>
+      <h1>Birthday<span class="exe">.exe</span></h1>
+      <div class="sub">A highly classified program built for one legendary brother.<br>Warning: may cause smiling, nostalgia, and uncontrollable cake cravings.</div>
+      <div class="terminal" id="terminal"><span class="prompt">C:\BROTHER&gt;</span> awaiting user authorization…</div>
+      <div class="progress-wrap"><div class="progress" id="progress"></div></div>
+      <div class="status"><span id="status">READY TO INITIALIZE</span><span id="percent">0%</span></div>
+      <div style="height:18px"></div>
+      <button id="run">▶ RUN BIRTHDAY.EXE</button>
+    </div>
+    <div id="result" class="hidden">
+      <div class="gift">
+        <div class="tag">// compilation successful</div>
+        <div class="emoji">🎂</div>
+        <h2>HAPPY BIRTHDAY, BRO! <span style="color:var(--pink)">♥</span></h2>
+        <p class="message">
+          🎂 Happy Birthday to the best brother ever! 🥳❤️<br><br>
+          Life would honestly be way more boring without you. Thanks for all the laughs, random arguments, stupid jokes, and unforgettable memories 😂<br><br>
+          You’re not just my brother — you’re my built-in best friend, permanent teammate, and my half life 🫶🫶💗<br><br>
+          I hope this year brings you everything you’re working for, tons of happiness, success, and memories you’ll never forget. Keep being the amazing person you are.<br><br>
+          And remember… no matter how old you get, I’ll always be there with you 💪💪🩵<br><br>
+          Happy Birthday, ƊÃĐÀ ❤️🎉<br>
+          Have an absolutely legendary day! 🥳🔥
+        </p>
+      </div>
+      <div class="stats">
+        <div class="stat"><b>∞</b><small>LOVE.exe</small></div>
+        <div class="stat"><b>0</b><small>BAD VIBES</small></div>
+        <div class="stat"><b>999+</b><small>HAPPY MOMENTS</small></div>
+      </div>
+      <div class="terminal" style="min-height:0;color:var(--green)"><span class="prompt">BUILD REPORT</span>
+✔ Brother status: LEGENDARY
+✔ Friendship module: INSTALLED FOR LIFE
+✔ Luck engine: MAXIMUM
+✔ Birthday wishes: SUCCESSFULLY DELIVERED
+
+<span style="color:var(--gold)">EXIT CODE: 0 — HAVE AN EPIC YEAR!</span></div>
+      <button id="again">↻ RUN CELEBRATION AGAIN</button>
+      <div class="signature">— Written with ❤️, compiled with 💻, delivered by your sibling.</div>
+    </div>
+    <div class="foot">100% love • 0% bugs • No actual system files were touched</div>
+  </main>
+</div>
+<script>
+const lines = [
+  "checking brother.dll ................. FOUND",
+  "loading childhood_memories.dat ....... OK",
+  "installing unlimited_love.pkg ........ 100%",
+  "removing worries.exe ................. DONE",
+  "boosting luck_engine ................. MAXIMUM",
+  "allocating cake & laughter ........... COMPLETE",
+  "compiling birthday_wishes ............ SUCCESS",
+  "",
+  "ALL SYSTEMS READY. INITIATING SURPRISE..."
+];
+const run = document.getElementById('run');
+const again = document.getElementById('again');
+const terminal = document.getElementById('terminal');
+const progress = document.getElementById('progress');
+const status = document.getElementById('status');
+const percent = document.getElementById('percent');
+const intro = document.getElementById('intro');
+const result = document.getElementById('result');
+let busy = false;
+const wait = ms => new Promise(resolve => setTimeout(resolve, ms));
+function confetti() {
+  const colors = ['#67e8f9','#f0abfc','#86efac','#fde68a','#c4b5fd','#fb7185'];
+  for (let i=0;i<95;i++) {
+    const piece = document.createElement('i');
+    piece.className = 'confetti';
+    piece.style.left = Math.random()*100+'vw';
+    piece.style.background = colors[Math.floor(Math.random()*colors.length)];
+    piece.style.animationDuration = (2.5+Math.random()*3)+'s';
+    piece.style.animationDelay = (Math.random()*.8)+'s';
+    piece.style.transform = `rotate(${Math.random()*360}deg)`;
+    document.body.appendChild(piece);
+    setTimeout(()=>piece.remove(),6500);
+  }
+}
+async function start() {
+  if (busy) return;
+  busy = true;
+  run.disabled = true;
+  run.textContent = '⏳ COMPILING SURPRISE...';
+  terminal.textContent = 'C:\\BROTHER> initializing birthday protocol...\n';
+  progress.style.width='0%'; percent.textContent='0%'; status.textContent='INITIALIZING';
+  for (let i=0;i<lines.length;i++) {
+    await wait(380);
+    terminal.textContent += lines[i]+'\n';
+    terminal.scrollTop = terminal.scrollHeight;
+    const p = Math.round(((i+1)/lines.length)*100);
+    progress.style.width=p+'%'; percent.textContent=p+'%';
+    status.textContent = p < 35 ? 'LOADING CORE MODULES' : p < 70 ? 'OPTIMIZING HAPPINESS' : 'FINALIZING SURPRISE';
+  }
+  await wait(650);
+  intro.classList.add('hidden');
+  result.classList.remove('hidden');
+  confetti();
+  busy = false;
+  run.disabled = false;
+  run.textContent = '▶ RUN BIRTHDAY.EXE';
+}
+run.addEventListener('click', start);
+again.addEventListener('click', ()=>{ result.classList.add('hidden'); intro.classList.remove('hidden'); start(); });
+</script>
+</body>
+</html>
